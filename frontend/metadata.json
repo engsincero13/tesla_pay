@@ -1,0 +1,7 @@
+{
+  "name": "Tesla Pay - Gestão Financeira Unificada",
+  "description": "Sistema de gestão de contas a pagar unificado para PF e PJ, focado em velocidade, clareza e segurança operacional para empreendedores de cursos online.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

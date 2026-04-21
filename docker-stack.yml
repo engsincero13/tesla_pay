@@ -1,0 +1,52 @@
+services:
+  teslapay_frontend:
+    image: gibaajr/teslapay-frontend:2.0.5
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      NEXT_PUBLIC_API_URL: /api
+      # Auth Configuration
+      NEXTAUTH_URL: https://teslapay.teslatreinamentos.com
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      KEYCLOAK_CLIENT_ID: tesla-pay
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
+      KEYCLOAK_ISSUER: https://auth.teslatreinamentos.com/realms/tesla-hub
+    deploy:
+      replicas: 1
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=network_swarm_public
+        - traefik.http.routers.teslapay_frontend.rule=Host(`teslapay.teslatreinamentos.com`)
+        - traefik.http.routers.teslapay_frontend.entrypoints=websecure
+        - traefik.http.routers.teslapay_frontend.tls=true
+        - traefik.http.routers.teslapay_frontend.tls.certresolver=letsencryptresolver
+        - traefik.http.services.teslapay_frontend.loadbalancer.server.port=3000
+    networks:
+      - network_swarm_public
+
+  teslapay_backend:
+    image: gibaajr/teslapay-backend:2.0.5
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      CORS_ORIGIN: https://teslapay.teslatreinamentos.com
+      DATABASE_URL: ${DATABASE_URL}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      WEBHOOK_API_KEY: ${WEBHOOK_API_KEY}
+    deploy:
+      replicas: 1
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=network_swarm_public
+        - traefik.http.routers.teslapay_backend.rule=Host(`teslapay.teslatreinamentos.com`) && (PathPrefix(`/api/auth/sync`) || (PathPrefix(`/api`) && !PathPrefix(`/api/auth`)))
+        - traefik.http.routers.teslapay_backend.entrypoints=websecure
+        - traefik.http.routers.teslapay_backend.tls=true
+        - traefik.http.routers.teslapay_backend.tls.certresolver=letsencryptresolver
+        - traefik.http.services.teslapay_backend.loadbalancer.server.port=3001
+    networks:
+      - network_swarm_public
+
+networks:
+  network_swarm_public:
+    external: true
+    name: network_swarm_public
