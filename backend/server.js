@@ -623,7 +623,7 @@ router.put('/platform-balances', async (req, res) => {
     }
 
     const normalizedItems = normalizePlatformBalancePayload(payloadItems);
-    const { grandTotal: totalAmount } = calculatePlatformBalanceTotals(normalizedItems);
+    const { availableTotal: totalAmount } = calculatePlatformBalanceTotals(normalizedItems);
     const client = await pool.connect();
 
     try {
@@ -1064,7 +1064,7 @@ router.post('/webhook/platform-balances', async (req, res) => {
 
     const effectiveDate = normalizeDateInput(date);
     const normalizedItems = normalizePlatformBalancePayload(items);
-    const { grandTotal: totalAmount } = calculatePlatformBalanceTotals(normalizedItems);
+    const { availableTotal: totalAmount } = calculatePlatformBalanceTotals(normalizedItems);
     const client = await pool.connect();
 
     try {

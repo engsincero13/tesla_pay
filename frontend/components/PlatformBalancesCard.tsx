@@ -77,7 +77,7 @@ export const PlatformBalancesCard = ({
                                 {formatCurrency(balances.grandTotal)}
                             </h3>
                             <p className="mt-1 text-sm text-muted-foreground">
-                                Total consolidado do dia acompanha o Caixa Operacional.
+                                Saldo disponivel do dia acompanha o Caixa Operacional.
                             </p>
                             <p className="mt-2 text-xs font-medium text-muted-foreground">
                                 Ultima atualizacao: {formatDateTime(balances.lastUpdatedAt)}
